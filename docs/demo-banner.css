@@ -14,7 +14,7 @@
   transition: max-height .25s ease;
 }
 .demo-banner.open {
-  max-height: 200px;
+  max-height: 240px;
 }
 
 /* Always-visible compact strip (the "tap target") */
@@ -60,6 +60,40 @@
   gap: .5rem;
   flex-wrap: wrap;
 }
+
+/* Credentials line: staff login link + password */
+.demo-banner-body .demo-creds {
+  margin-top: .5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  flex-wrap: wrap;
+  font-size: .8rem;
+}
+.demo-creds .demo-admin-link {
+  color: #5d4e16;
+  text-decoration: underline;
+  font-weight: 600;
+}
+.demo-creds .demo-admin-link:hover { color: #4a3f00; }
+.demo-creds-sep { color: rgba(93, 78, 22, .4); }
+.demo-creds-label { color: rgba(93, 78, 22, .8); }
+.demo-creds-pw {
+  background: rgba(240, 200, 96, .55);
+  border: 1px solid #d4a93e;
+  color: #4a3f00;
+  padding: .12rem .5rem;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: .85em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s ease;
+  user-select: all;
+}
+.demo-creds-pw:hover { background: rgba(240, 200, 96, .8); }
+.demo-creds-pw.copied { background: #c8e0c2; border-color: #6fa667; color: #2b5022; }
 
 .demo-banner .demo-pill {
   background: #f0c860;
