@@ -138,6 +138,39 @@ p { margin: 0 0 1rem; }
   width: 64px;
   background: linear-gradient(90deg, transparent 0%, var(--cream) 70%);
   pointer-events: none;
+  transition: opacity .2s ease;
+}
+.cat-tabs-wrap.scrolled-end::after,
+.cat-tabs-wrap.scrolled-end .cat-tabs-arrow { opacity: 0; }
+
+/* Tiny chevron arrow hint that we can scroll right for more categories */
+.cat-tabs-arrow {
+  position: absolute;
+  right: 14px;
+  top: calc(50% - .65rem);  /* account for bottom padding on tabs */
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity .2s ease;
+  animation: cat-tabs-arrow-nudge 1.8s ease-in-out 1s 2;
+}
+.section-alt .cat-tabs-arrow { background: var(--sand); }
+.cat-tabs-arrow svg {
+  width: 14px;
+  height: 14px;
+  color: var(--green-deep);
+}
+@keyframes cat-tabs-arrow-nudge {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(4px); }
 }
 .section-alt .cat-tabs-wrap::after { background: linear-gradient(90deg, transparent 0%, var(--sand) 70%); }
 .cat-tabs {

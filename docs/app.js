@@ -85,6 +85,25 @@ function renderCategories() {
   });
   STATE.activeCategory = STATE.data.categories[0].id;
   renderCategoryContent(STATE.activeCategory);
+  setupCatTabsScrollHint();
+}
+
+function setupCatTabsScrollHint() {
+  const wrap = document.getElementById('catTabsWrap');
+  const tabs = document.getElementById('catTabs');
+  if (!wrap || !tabs) return;
+
+  const update = () => {
+    // True if there's nothing more to scroll right (within 4px tolerance)
+    const atEnd = tabs.scrollLeft + tabs.clientWidth >= tabs.scrollWidth - 4;
+    const noOverflow = tabs.scrollWidth <= tabs.clientWidth + 1;
+    wrap.classList.toggle('scrolled-end', atEnd || noOverflow);
+  };
+
+  tabs.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  // Initial paint after layout settles
+  requestAnimationFrame(update);
 }
 
 function switchCategory(id) {
