@@ -111,10 +111,10 @@ body { background: var(--sand); min-height: 100vh; }
       In the real version this is a secure card form hosted by Yoco — your card details never touch our server.
     </div>
 
-    <button class="pay-btn" id="payBtn">Pay deposit & continue →</button>
+    <button class="pay-btn" id="payBtn">Continue to Yoco →</button>
     <a class="pay-cancel" id="cancelLink" href="index.html">← Cancel and return to booking</a>
 
-    <div class="pay-lock">🔒 Secured by payment gateway · PCI-DSS compliant</div>
+    <div class="pay-lock">🔒 You'll be redirected to Yoco to complete payment securely</div>
   </div>
 </div>
 
@@ -145,10 +145,10 @@ async function load() {
 document.getElementById("payBtn").addEventListener("click", async () => {
   const btn = document.getElementById("payBtn");
   btn.disabled = true;
-  btn.textContent = "Processing…";
-  await new Promise(r => setTimeout(r, 900));
-  // Simulate the gateway redirect
-  location.href = `confirmation.html?booking=${bookingId}&mock=1&mockCheckoutId=demo_${bookingId}`;
+  btn.textContent = "Redirecting to Yoco…";
+  await new Promise(r => setTimeout(r, 600));
+  // Redirect to Yoco-branded checkout (faithful mock of real Yoco hosted checkout)
+  location.href = `yoco-checkout.html?booking=${bookingId}`;
 });
 
 load();

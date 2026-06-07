@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0a" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Pay with Yoco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="demo-banner.css" />
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #fafafa;
+    color: #0a0a0a;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* Yoco-style top bar */
+  .yoco-bar {
+    background: #0a0a0a;
+    color: #fdfdfd;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .yoco-logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #fdfdfd;
+  }
+  .yoco-logo .dot { color: #1B7CFF; }
+  .secure-badge {
+    font-size: 0.78rem;
+    color: #a0a0a0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .secure-badge svg { width: 14px; height: 14px; }
+
+  /* Main layout */
+  .checkout-wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 6rem;
+  }
+
+  .merchant {
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+  .merchant-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: #707070;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .merchant-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0a0a0a;
+  }
+
+  .amount-block {
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+  .amount-label {
+    font-size: 0.78rem;
+    color: #707070;
+    margin-bottom: 0.35rem;
+  }
+  .amount-value {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #0a0a0a;
+  }
+  .amount-meta {
+    font-size: 0.82rem;
+    color: #707070;
+    margin-top: 0.35rem;
+  }
+
+  /* Card form */
+  .card-form {
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+  .form-section-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
+  .field {
+    margin-bottom: 1rem;
+  }
+  .field label {
+    display: block;
+    font-size: 0.78rem;
+    color: #555;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+  }
+  .field input {
+    width: 100%;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid #d8d8d8;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #0a0a0a;
+    background: #fff;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .field input:focus {
+    outline: none;
+    border-color: #1B7CFF;
+    box-shadow: 0 0 0 3px rgba(27,124,255,0.18);
+  }
+  .field input.error {
+    border-color: #e04040;
+    box-shadow: 0 0 0 3px rgba(224,64,64,0.12);
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .card-input-wrap {
+    position: relative;
+  }
+  .card-input-wrap input {
+    padding-right: 60px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+  .card-brand {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #999;
+    letter-spacing: 0.05em;
+  }
+  .card-brand.visa { color: #1A1F71; }
+
+  /* Card brand icons row */
+  .card-brands {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.85rem;
+    align-items: center;
+  }
+  .card-brands .brand-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 4px;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #fff;
+    font-family: Inter, sans-serif;
+  }
+  .brand-pill.visa { background: #1A1F71; }
+  .brand-pill.mc { background: linear-gradient(90deg,#EB001B 50%,#F79E1B 50%); color: #fff; }
+  .brand-pill.amex { background: #2E77BC; }
+
+  /* Cancel link */
+  .cancel-row {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .cancel-row a {
+    color: #707070;
+    font-size: 0.82rem;
+    text-decoration: none;
+  }
+  .cancel-row a:hover { color: #0a0a0a; text-decoration: underline; }
+
+  .error-msg {
+    color: #c93030;
+    font-size: 0.78rem;
+    margin-top: 0.4rem;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+
+  /* Test card hint */
+  .test-hint {
+    background: #fff8e1;
+    border: 1px solid #f3d97e;
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    font-size: 0.78rem;
+    color: #6b5400;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+  .test-hint strong { color: #4a3a00; }
+  .test-hint code {
+    background: rgba(0,0,0,0.06);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.82em;
+  }
+
+  /* Pay button */
+  .pay-btn {
+    width: 100%;
+    background: #0a0a0a;
+    color: #fdfdfd;
+    border: none;
+    border-radius: 12px;
+    padding: 1.05rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.75rem;
+    transition: background 120ms, transform 120ms;
+    font-family: inherit;
+  }
+  .pay-btn:hover { background: #1f1f1f; }
+  .pay-btn:active { transform: scale(0.985); }
+  .pay-btn:disabled {
+    background: #2a2a2a;
+    cursor: wait;
+    color: #999;
+  }
+
+  /* Footer */
+  .yoco-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.72rem;
+    color: #909090;
+    line-height: 1.6;
+  }
+  .yoco-footer .lock { color: #1B7CFF; }
+  .yoco-footer a { color: #707070; text-decoration: none; }
+
+  /* Processing overlay */
+  .processing-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(250,250,250,0.96);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 100;
+  }
+  .processing-overlay.show { display: flex; }
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid #ececec;
+    border-top-color: #1B7CFF;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 1rem;
+  }
+  .processing-text {
+    color: #0a0a0a;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .processing-sub {
+    color: #707070;
+    font-size: 0.82rem;
+    margin-top: 0.25rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Adjust top spacing when demo banner is visible */
+  body.has-demo-banner .yoco-bar { margin-top: 0; }
+
+  @media (max-width: 480px) {
+    .checkout-wrap { padding: 1.5rem 1rem 4rem; }
+    .yoco-bar { padding: 0.85rem 1rem; }
+    .yoco-logo { font-size: 1.25rem; }
+    .amount-value { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top bar (Yoco-styled) -->
+<div class="yoco-bar">
+  <div class="yoco-logo">yoco<span class="dot">.</span></div>
+  <div class="secure-badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <rect x="4" y="10" width="16" height="10" rx="2"/>
+      <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+    </svg>
+    Secure checkout
+  </div>
+</div>
+
+<div class="checkout-wrap">
+
+  <div class="merchant">
+    <div class="merchant-label">Paying</div>
+    <div class="merchant-name" id="merchant-name">Fordoun Spa</div>
+  </div>
+
+  <div class="amount-block">
+    <div class="amount-label">Total</div>
+    <div class="amount-value" id="amount-value">R0</div>
+    <div class="amount-meta" id="amount-meta">Booking deposit</div>
+  </div>
+
+  <div class="test-hint">
+    <strong>Demo mode.</strong> Use test card <code>4242 4242 4242 4242</code>, any future expiry, any 3-digit CVV. No real payment will be processed.
+  </div>
+
+  <form class="card-form" id="card-form" autocomplete="off">
+    <div class="form-section-title">Card details</div>
+
+    <div class="card-brands" aria-label="Accepted cards">
+      <span class="brand-pill visa">VISA</span>
+      <span class="brand-pill mc">MC</span>
+      <span class="brand-pill amex">AMEX</span>
+    </div>
+
+    <div class="field">
+      <label for="card-number">Card number</label>
+      <div class="card-input-wrap">
+        <input type="text" id="card-number" inputmode="numeric" placeholder="1234 1234 1234 1234" maxlength="19" autocomplete="cc-number" />
+        <span class="card-brand" id="card-brand"></span>
+      </div>
+      <div class="error-msg" id="card-error">Card declined. Use test card 4242 4242 4242 4242.</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="card-expiry">Expiry</label>
+        <input type="text" id="card-expiry" inputmode="numeric" placeholder="MM / YY" maxlength="7" autocomplete="cc-exp" />
+      </div>
+      <div class="field">
+        <label for="card-cvv">CVV</label>
+        <input type="text" id="card-cvv" inputmode="numeric" placeholder="123" maxlength="4" autocomplete="cc-csc" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="card-name">Name on card</label>
+      <input type="text" id="card-name" placeholder="Jane Smith" autocomplete="cc-name" />
+    </div>
+
+    <div class="field">
+      <label for="card-email">Email for receipt</label>
+      <input type="email" id="card-email" placeholder="you@example.com" autocomplete="email" />
+    </div>
+
+    <button type="submit" class="pay-btn" id="pay-btn">🔒 Pay <span id="pay-amount">R0</span></button>
+
+    <div class="cancel-row">
+      <a href="pay.html" id="cancel-link">← Cancel and return to Fordoun Spa</a>
+    </div>
+  </form>
+
+  <div class="yoco-footer">
+    <div><span class="lock">🔒</span> Payments secured by Yoco</div>
+    <div style="margin-top:0.4rem">Yoco Technologies (Pty) Ltd · FSP 45650</div>
+  </div>
+</div>
+
+<div class="processing-overlay" id="processing">
+  <div class="spinner"></div>
+  <div class="processing-text">Processing payment</div>
+  <div class="processing-sub">Please don't close this window</div>
+</div>
+
+<script src="demo-mock.js"></script>
+<script src="demo-banner.js"></script>
+<script>
+  // Get booking from URL
+  const params = new URLSearchParams(location.search);
+  const bookingId = params.get("booking");
+
+  async function init() {
+    if (!bookingId) {
+      document.body.innerHTML = '<div style="padding:2rem;text-align:center;font-family:Inter,sans-serif">No booking specified. <a href="index.html">Start over</a>.</div>';
+      return;
+    }
+
+    // Load booking via mock API (consistent with rest of app)
+    const res = await fetch(`/api/bookings/${bookingId}`);
+    if (!res.ok) {
+      document.body.innerHTML = '<div style="padding:2rem;text-align:center;font-family:Inter,sans-serif">Booking not found. <a href="index.html">Start over</a>.</div>';
+      return;
+    }
+    const booking = await res.json();
+
+    // Populate
+    const deposit = booking.deposit_cents / 100;
+    document.getElementById("amount-value").textContent = "R" + deposit.toLocaleString("en-ZA");
+    document.getElementById("pay-amount").textContent = "R" + deposit.toLocaleString("en-ZA");
+    const treatmentNames = (booking.treatments || []).map(t => t.name).join(", ") || "treatment";
+    document.getElementById("amount-meta").textContent =
+      "Deposit for " + treatmentNames + " on " +
+      new Date(booking.preferred_date).toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" });
+
+    // Wire cancel link back to the right booking
+    document.getElementById("cancel-link").href = "pay.html?booking=" + bookingId;
+
+    // Prefill email if customer email exists on booking
+    if (booking.customer_email) {
+      document.getElementById("card-email").value = booking.customer_email;
+    }
+
+    // Card input formatting
+    const cardInput = document.getElementById("card-number");
+    const cardBrand = document.getElementById("card-brand");
+    const expInput = document.getElementById("card-expiry");
+    const cvvInput = document.getElementById("card-cvv");
+    const nameInput = document.getElementById("card-name");
+
+    cardInput.addEventListener("input", (e) => {
+      let v = e.target.value.replace(/\D/g, "").slice(0, 16);
+      e.target.value = v.replace(/(.{4})/g, "$1 ").trim();
+      if (v.startsWith("4")) {
+        cardBrand.textContent = "VISA";
+        cardBrand.className = "card-brand visa";
+      } else if (v.startsWith("5")) {
+        cardBrand.textContent = "MASTER";
+        cardBrand.className = "card-brand";
+      } else {
+        cardBrand.textContent = "";
+      }
+      cardInput.classList.remove("error");
+      document.getElementById("card-error").classList.remove("show");
+    });
+
+    expInput.addEventListener("input", (e) => {
+      let v = e.target.value.replace(/\D/g, "").slice(0, 4);
+      if (v.length >= 3) v = v.slice(0, 2) + " / " + v.slice(2);
+      e.target.value = v;
+    });
+
+    cvvInput.addEventListener("input", (e) => {
+      e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4);
+    });
+
+    // Form submit
+    document.getElementById("card-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const cardNum = cardInput.value.replace(/\s/g, "");
+
+      if (cardNum !== "4242424242424242") {
+        cardInput.classList.add("error");
+        document.getElementById("card-error").classList.add("show");
+        cardInput.focus();
+        return;
+      }
+
+      const btn = document.getElementById("pay-btn");
+      btn.disabled = true;
+      btn.textContent = "Processing…";
+      document.getElementById("processing").classList.add("show");
+
+      // Realistic delay then call the mock payment endpoint
+      await new Promise(r => setTimeout(r, 2200));
+      await fetch("/api/dev/simulate-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ booking_id: Number(bookingId) })
+      });
+
+      location.href = "confirmation.html?booking=" + bookingId;
+    });
+
+    // Shift+click pay button to auto-fill (demo helper)
+    document.getElementById("pay-btn").addEventListener("click", (e) => {
+      if (e.shiftKey) {
+        e.preventDefault();
+        cardInput.value = "4242 4242 4242 4242";
+        expInput.value = "12 / 28";
+        cvvInput.value = "123";
+        nameInput.value = booking.customer_name || "Jane Smith";
+        cardBrand.textContent = "VISA";
+        cardBrand.className = "card-brand visa";
+      }
+    });
+  }
+
+  init();
+</script>
+
+</body>
+</html>
