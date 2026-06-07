@@ -15,6 +15,12 @@
       </div>
       <div class="demo-banner-body" id="demoBannerBody">
         <span><b>No real payment, no real email.</b> Pick treatments and click around to see the full flow.</span>
+        <div class="demo-creds">
+          <a href="admin.html" class="demo-admin-link">🔗 Staff login</a>
+          <span class="demo-creds-sep">·</span>
+          <span class="demo-creds-label">password:</span>
+          <code class="demo-creds-pw">letmein</code>
+        </div>
         <div class="demo-actions">
           <button id="demoReset" type="button">Reset demo</button>
         </div>
@@ -51,6 +57,37 @@
         window.FordounDemo && window.FordounDemo.reset();
       }
     });
+
+    // Click password chip → copy to clipboard + brief visual confirmation
+    const pwChip = banner.querySelector(".demo-creds-pw");
+    if (pwChip) {
+      pwChip.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        try {
+          await navigator.clipboard.writeText(pwChip.textContent.trim());
+          const original = pwChip.textContent;
+          pwChip.textContent = "copied ✓";
+          pwChip.classList.add("copied");
+          setTimeout(() => {
+            pwChip.textContent = original;
+            pwChip.classList.remove("copied");
+          }, 1500);
+        } catch {
+          // Clipboard API blocked (insecure context etc) — select instead
+          const range = document.createRange();
+          range.selectNodeContents(pwChip);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+      });
+    }
+
+    // Stop clicks on the staff login link from collapsing the drawer
+    const adminLink = banner.querySelector(".demo-admin-link");
+    if (adminLink) {
+      adminLink.addEventListener("click", (e) => e.stopPropagation());
+    }
 
     // Listen for magic-link ready event from the mock
     window.addEventListener("demo:magic-link-ready", (e) => {
