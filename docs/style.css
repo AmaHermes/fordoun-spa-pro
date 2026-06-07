@@ -284,6 +284,7 @@ p { margin: 0 0 1rem; }
 }
 input[type="date"],
 input[type="text"],
+input[type="email"],
 input[type="tel"],
 select,
 textarea {
@@ -318,6 +319,18 @@ input[type="date"]::-webkit-date-and-time-value {
 }
 input[type="date"]::-webkit-calendar-picker-indicator {
   margin-left: auto;
+}
+/* iOS Safari autofill paints email/text fields with its own white/yellow
+   background, ignoring the cream we set above. Force the cream colour
+   through with a long transition + text-fill shim. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--ink);
+  -webkit-box-shadow: 0 0 0 1000px var(--cream) inset;
+  caret-color: var(--ink);
+  transition: background-color 9999s ease-in-out 0s;
 }
 input:focus, select:focus, textarea:focus {
   outline: none;
