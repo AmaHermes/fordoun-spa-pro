@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#3a4a3a" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Fordoun Spa — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="demo-banner.css" />
+<style>
+.admin-header {
+  background: var(--green-deep);
+  color: var(--cream);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+.admin-header h1 {
+  color: var(--cream); font-size: 1.2rem;
+  margin: 0;
+  font-family: var(--sans);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.admin-header button {
+  background: transparent; border: 1px solid rgba(255,255,255,.3);
+  color: var(--cream); padding: .4rem .8rem; border-radius: 6px;
+  font-family: inherit; font-size: .85rem; cursor: pointer;
+}
+.admin-main { max-width: 980px; margin: 0 auto; padding: 1.5rem; }
+.admin-section { margin-bottom: 2.5rem; }
+.admin-section h2 {
+  font-family: var(--sans);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1.5px solid var(--rule);
+}
+.admin-section h2 .count {
+  background: var(--gold);
+  color: var(--green-deep);
+  border-radius: 12px;
+  padding: .15rem .55rem;
+  font-size: .8rem;
+  margin-left: .5rem;
+}
+
+.booking-row {
+  background: var(--cream);
+  border: 1.5px solid var(--rule);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: .75rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: start;
+}
+.booking-row.pending { border-color: var(--gold); background: #fef9ee; }
+.booking-row.confirmed { border-color: #4caf50; background: #f5fbf5; }
+.booking-row.completed { opacity: .55; }
+
+.booking-meta {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--green-deep);
+  font-weight: 600;
+}
+.booking-meta .return-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--green-deep);
+  font-size: .65rem;
+  padding: .15rem .5rem;
+  border-radius: 4px;
+  margin-left: .5rem;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-family: var(--sans);
+  font-weight: 700;
+}
+.booking-contacts { font-size: .85rem; color: var(--ink-soft); margin-top: .15rem; }
+.booking-contacts a { color: var(--green-deep); margin-right: .75rem; }
+.booking-treatments {
+  margin: .75rem 0 .25rem;
+  font-size: .9rem;
+  color: var(--ink-soft);
+}
+.booking-treatments span { display: inline-block; margin-right: 1rem; }
+.booking-notes {
+  background: rgba(0,0,0,.04);
+  padding: .5rem .75rem;
+  border-radius: 6px;
+  font-size: .85rem;
+  margin: .5rem 0;
+  font-style: italic;
+}
+.booking-totals {
+  display: flex; align-items: center; gap: 1.25rem;
+  margin-top: .75rem;
+}
+.booking-totals .deposit-paid {
+  color: #2e7d32; font-weight: 600; font-size: .85rem;
+}
+.booking-totals .balance {
+  color: var(--ink-soft); font-size: .85rem;
+}
+.booking-actions {
+  display: flex; flex-direction: column; gap: .4rem;
+  white-space: nowrap;
+}
+.booking-actions button {
+  font-family: inherit; font-size: .85rem;
+  padding: .45rem .9rem; border-radius: 6px;
+  border: 1.5px solid var(--rule);
+  background: var(--cream); cursor: pointer;
+  color: var(--ink);
+}
+.booking-actions button.primary {
+  background: var(--green-deep); color: var(--cream); border-color: var(--green-deep);
+}
+.booking-actions button.danger {
+  color: #a64242; border-color: #d9c0c0;
+}
+.booking-actions button:hover { filter: brightness(.95); }
+
+.login-box {
+  max-width: 360px; margin: 6rem auto; padding: 2rem;
+  background: var(--cream); border-radius: 14px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.login-box h1 {
+  font-family: var(--serif); font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+.login-box input {
+  width: 100%; padding: .85rem 1rem;
+  border: 1.5px solid var(--rule); border-radius: 10px;
+  font-size: 1rem; margin-bottom: 1rem;
+}
+.login-box button {
+  width: 100%;
+  background: var(--green-deep); color: var(--cream);
+  padding: 1rem; border: none; border-radius: 10px;
+  font-size: 1rem; font-weight: 600;
+  cursor: pointer;
+}
+.login-err {
+  color: #a64242; font-size: .85rem; margin-top: .5rem;
+  min-height: 1.2em;
+}
+
+.empty-state {
+  text-align: center; padding: 2rem 1rem;
+  color: var(--ink-soft); font-style: italic;
+}
+</style>
+</head>
+<body style="background: var(--sand);">
+
+<div id="loginView" hidden>
+  <div class="login-box">
+    <h1>🌿 Spa Admin</h1>
+    <form id="loginForm">
+      <input type="password" id="adminPw" placeholder="Admin password" autocomplete="current-password" required />
+      <button type="submit">Sign in</button>
+      <div class="login-err" id="loginErr"></div>
+    </form>
+  </div>
+</div>
+
+<div id="adminView" hidden>
+  <header class="admin-header">
+    <h1>Spa Admin</h1>
+    <button id="logoutBtn">Sign out</button>
+  </header>
+
+  <main class="admin-main">
+
+    <section class="admin-section">
+      <h2>⚠️ Awaiting time confirmation <span class="count" id="pendingCount">0</span></h2>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-top:-.5rem;margin-bottom:1rem">
+        Deposit received — guest is waiting for you to pin the exact treatment time.
+        Tap "✓ Confirmed" once you've WhatsApp'd them.
+      </p>
+      <div id="pendingList"></div>
+    </section>
+
+    <section class="admin-section">
+      <h2>Today <span class="count" id="todayCount">0</span></h2>
+      <div id="todayList"></div>
+    </section>
+
+    <section class="admin-section">
+      <h2>Tomorrow <span class="count" id="tomorrowCount">0</span></h2>
+      <div id="tomorrowList"></div>
+    </section>
+
+    <section class="admin-section">
+      <h2>Recent bookings</h2>
+      <div id="recentList"></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="demo-mock.js"></script>
+<script src="demo-banner.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+
+let TODAY_STR = null;
+let TOMORROW_STR = null;
+
+async function boot() {
+  // Probe whether already authenticated
+  const res = await fetch('/api/admin/today');
+  if (res.status === 401) showLogin();
+  else if (res.ok) {
+    showAdmin();
+    const d = await res.json();
+    TODAY_STR = d.today;
+    TOMORROW_STR = d.tomorrow;
+    renderAll(d);
+    loadRecent();
+  } else {
+    showLogin();
+  }
+}
+
+function showLogin() {
+  $('#loginView').hidden = false;
+  $('#adminView').hidden = true;
+}
+function showAdmin() {
+  $('#loginView').hidden = true;
+  $('#adminView').hidden = false;
+}
+
+$('#loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const pw = $('#adminPw').value;
+  const err = $('#loginErr');
+  err.textContent = '';
+  const res = await fetch('/api/admin/login', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ password: pw }),
+  });
+  if (!res.ok) {
+    err.textContent = 'Wrong password — try again.';
+    $('#adminPw').value = '';
+    return;
+  }
+  await boot();
+});
+
+$('#logoutBtn').addEventListener('click', async () => {
+  await fetch('/api/admin/logout', { method: 'POST' });
+  location.reload();
+});
+
+function renderAll(d) {
+  const today = d.bookings.filter(b => b.preferred_date === d.today);
+  const tomorrow = d.bookings.filter(b => b.preferred_date === d.tomorrow);
+  $('#todayCount').textContent = today.length;
+  $('#tomorrowCount').textContent = tomorrow.length;
+  $('#pendingCount').textContent = d.pending.length;
+
+  $('#pendingList').innerHTML = d.pending.length
+    ? d.pending.map(renderBooking).join('')
+    : '<p class="empty-state">Nothing waiting — well done. 🌿</p>';
+  $('#todayList').innerHTML = today.length
+    ? today.map(renderBooking).join('')
+    : '<p class="empty-state">No treatments booked for today.</p>';
+  $('#tomorrowList').innerHTML = tomorrow.length
+    ? tomorrow.map(renderBooking).join('')
+    : '<p class="empty-state">No treatments booked for tomorrow.</p>';
+
+  wireBookingActions();
+}
+
+async function loadRecent() {
+  const res = await fetch('/api/admin/bookings?limit=25');
+  if (!res.ok) return;
+  const d = await res.json();
+  // exclude pending_payment (never paid) from "recent" — they're noise
+  const filtered = d.bookings.filter(b => b.status !== 'pending_payment');
+  $('#recentList').innerHTML = filtered.length
+    ? filtered.map(renderBooking).join('')
+    : '<p class="empty-state">No bookings yet.</p>';
+  wireBookingActions();
+}
+
+function renderBooking(b) {
+  const isPending = b.status === 'paid_deposit' && !b.confirmed_slot_at;
+  const isConfirmed = b.status === 'confirmed' || b.confirmed_slot_at;
+  const isCompleted = b.status === 'completed';
+  const rowClass = isCompleted ? 'completed'
+                 : isConfirmed ? 'confirmed'
+                 : isPending ? 'pending'
+                 : '';
+
+  const total = (b.total_cents / 100).toLocaleString('en-ZA');
+  const deposit = (b.deposit_cents / 100).toLocaleString('en-ZA');
+  const balance = ((b.total_cents - b.deposit_cents) / 100).toLocaleString('en-ZA');
+  const treatments = (b.treatments || []).map(t =>
+    `<span>${escapeHtml(t.name)} (${t.duration} min)</span>`
+  ).join('');
+
+  const cleanPhone = (b.customer_phone || '').replace(/\D/g, '');
+  const waNum = cleanPhone.startsWith('0') ? '27' + cleanPhone.slice(1) : cleanPhone;
+
+  const actions = [];
+  if (isPending) {
+    actions.push(`<button class="primary" data-id="${b.id}" data-to="confirmed">✓ Confirmed slot</button>`);
+  } else if (b.status === 'paid_deposit' || b.status === 'confirmed') {
+    actions.push(`<button class="primary" data-id="${b.id}" data-to="completed">✓ Completed</button>`);
+    actions.push(`<button class="danger" data-id="${b.id}" data-to="no_show">✗ No-show</button>`);
+  }
+  actions.push(`<button data-customer-id="${b.customer_id}">Customer history</button>`);
+
+  const isReturning = (b.visits_count || 0) > 0;
+
+  return `
+  <article class="booking-row ${rowClass}" id="booking-${b.id}">
+    <div>
+      <div class="booking-meta">
+        ${escapeHtml(b.customer_name || b.email)}
+        ${isReturning ? `<span class="return-badge">Returning</span>` : ''}
+        <span style="color:var(--ink-soft);font-weight:400;font-size:.95rem;margin-left:.5rem">
+          ${escapeHtml(b.preferred_date)} · ${escapeHtml(b.preferred_time)}
+        </span>
+      </div>
+      <div class="booking-contacts">
+        ${cleanPhone ? `<a href="tel:+${waNum}">📞 ${escapeHtml(b.customer_phone)}</a>` : ''}
+        ${cleanPhone ? `<a href="https://wa.me/${waNum}" target="_blank">💬 WhatsApp</a>` : ''}
+        <a href="mailto:${escapeHtml(b.email)}">✉️ ${escapeHtml(b.email)}</a>
+      </div>
+      <div class="booking-treatments">${treatments}</div>
+      ${b.notes_from_guest ? `<div class="booking-notes">📝 ${escapeHtml(b.notes_from_guest)}</div>` : ''}
+      <div class="booking-totals">
+        <span><b>R${total}</b> total</span>
+        <span class="deposit-paid">✓ R${deposit} deposit paid</span>
+        <span class="balance">R${balance} balance on arrival</span>
+      </div>
+    </div>
+    <div class="booking-actions">${actions.join('')}</div>
+  </article>`;
+}
+
+function wireBookingActions() {
+  document.querySelectorAll('.booking-actions button[data-to]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      const to = btn.dataset.to;
+      btn.disabled = true;
+      const res = await fetch(`/api/admin/bookings/${id}/transition`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ to }),
+      });
+      if (!res.ok) {
+        const e = await res.json().catch(() => ({}));
+        alert(e.error || 'Something went wrong');
+        btn.disabled = false;
+        return;
+      }
+      // Refresh
+      await boot();
+    });
+  });
+  document.querySelectorAll('.booking-actions button[data-customer-id]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.customerId;
+      const res = await fetch(`/api/admin/customers/${id}`);
+      if (!res.ok) return;
+      const d = await res.json();
+      const visits = d.bookings.filter(b => b.status === 'completed').length;
+      const spent = (d.customer.cents_spent / 100).toLocaleString('en-ZA');
+      alert(
+        `${d.customer.name || d.customer.email}\n` +
+        `${d.customer.email} · ${d.customer.phone || ''}\n\n` +
+        `Visits: ${visits}\nLifetime spend: R${spent}\n\n` +
+        `Recent bookings:\n` +
+        d.bookings.slice(0, 5).map(b =>
+          `  • ${b.preferred_date} · ${b.status} · R${(b.total_cents/100).toFixed(0)}`
+        ).join('\n')
+      );
+    });
+  });
+}
+
+function escapeHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+boot();
+</script>
+</body>
+</html>

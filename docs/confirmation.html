@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#3a4a3a" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Booking confirmed — Fordoun Spa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="demo-banner.css" />
+<style>
+.conf-hero {
+  background: linear-gradient(180deg, rgba(28,38,30,.85), rgba(28,38,30,.95)), url('hero.jpg') center / cover;
+  color: var(--cream);
+  padding: 4rem 1.5rem 3rem;
+  text-align: center;
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.conf-hero h1 { color: var(--cream); font-size: clamp(2rem, 6vw, 3.5rem); margin-bottom: 1rem; }
+.conf-hero p { font-size: 1.1rem; opacity: .9; max-width: 50ch; margin: 0 auto 1rem; }
+.conf-card {
+  max-width: 540px;
+  margin: -2rem auto 3rem;
+  background: var(--cream);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  position: relative;
+}
+.conf-status {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  font-weight: 600;
+  color: var(--green-deep);
+  margin-bottom: 1.5rem;
+}
+.conf-status .dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--gold);
+  display: inline-block;
+}
+.conf-status.paid .dot { background: #4caf50; }
+.conf-status.pending .dot { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.conf-treatments { list-style: none; padding: 0; margin: 1rem 0; }
+.conf-treatments li {
+  display: flex; justify-content: space-between; padding: .6rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--serif);
+}
+.conf-treatments li:last-child { border-bottom: none; }
+
+.conf-meta {
+  display: grid; grid-template-columns: auto 1fr; gap: .4rem 1rem;
+  background: var(--sand); padding: 1rem 1.25rem;
+  border-radius: 10px; margin: 1rem 0;
+  font-size: .92rem;
+}
+.conf-meta dt { color: var(--ink-soft); font-weight: 600; }
+.conf-meta dd { margin: 0; color: var(--ink); }
+
+.conf-next {
+  background: var(--green-deep);
+  color: var(--cream);
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin: 1.5rem 0;
+}
+.conf-next h3 { color: var(--cream); font-size: 1.1rem; margin-bottom: 1rem; }
+.conf-next ol { margin: 0; padding-left: 1.25rem; }
+.conf-next li { margin-bottom: .5rem; }
+
+.conf-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+.conf-actions a {
+  flex: 1; min-width: 140px; text-align: center;
+  padding: .85rem 1rem;
+  background: var(--gold);
+  color: var(--green-deep);
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.conf-actions a.secondary {
+  background: transparent;
+  border: 1.5px solid var(--green-deep);
+  color: var(--green-deep);
+}
+</style>
+</head>
+<body>
+
+<section class="conf-hero">
+  <h1>You're booked in 🌿</h1>
+  <p>We've received your deposit. The spa team will confirm your exact time on WhatsApp shortly.</p>
+</section>
+
+<section class="conf-card" id="card">
+  <div class="conf-status" id="status">
+    <span class="dot"></span>
+    <span id="statusText">Checking your booking…</span>
+  </div>
+
+  <h2 id="bookingId" style="margin:0 0 1rem">Booking #—</h2>
+
+  <ul class="conf-treatments" id="treatments"></ul>
+
+  <dl class="conf-meta" id="meta"></dl>
+
+  <div class="conf-next">
+    <h3>What happens next</h3>
+    <ol>
+      <li>You'll get a confirmation email in the next few minutes.</li>
+      <li>The spa team will WhatsApp you to confirm your exact treatment time.</li>
+      <li>On the day, arrive 15 min early, settle the balance, and relax.</li>
+    </ol>
+  </div>
+
+  <div class="conf-actions">
+    <a href="/" class="secondary">← Browse more treatments</a>
+    <a id="waLink" href="#" target="_blank" rel="noopener">Message the spa →</a>
+  </div>
+</section>
+
+<footer style="text-align:center;color:rgba(31,38,32,.55);padding:1.5rem;font-size:.85rem">
+  © Fordoun Hotel &amp; Spa
+</footer>
+
+<script>
+// Demo-mode: load mock + banner before page logic
+</script>
+<script src="demo-mock.js"></script>
+<script src="demo-banner.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const bookingId = params.get('booking');
+const isMock = params.get('mock') === '1';
+const mockCheckoutId = params.get('mockCheckoutId');
+
+const TREATMENT_NAMES = {};
+
+async function loadBooking() {
+  const res = await fetch(`/api/bookings/${bookingId}`);
+  if (!res.ok) {
+    document.getElementById('statusText').textContent = 'Booking not found.';
+    return;
+  }
+  const b = await res.json();
+  render(b);
+  return b;
+}
+
+function render(b) {
+  document.getElementById('bookingId').textContent = `Booking #${b.id}`;
+  const statusEl = document.getElementById('status');
+  const statusText = document.getElementById('statusText');
+  if (b.status === 'paid_deposit' || b.status === 'confirmed') {
+    statusEl.className = 'conf-status paid';
+    statusText.textContent = 'Deposit received — booking secured ✓';
+  } else if (b.status === 'pending_payment') {
+    statusEl.className = 'conf-status pending';
+    statusText.textContent = 'Waiting for payment to clear…';
+  } else {
+    statusText.textContent = `Status: ${b.status}`;
+  }
+
+  document.getElementById('treatments').innerHTML = b.treatments.map(t =>
+    `<li><span>${escapeHtml(t.name)}</span> <span>R${(t.price_cents/100).toLocaleString('en-ZA')}</span></li>`
+  ).join('');
+
+  const total = b.total_cents / 100;
+  const deposit = b.deposit_cents / 100;
+  document.getElementById('meta').innerHTML = `
+    <dt>Date</dt><dd>${escapeHtml(b.preferred_date)}</dd>
+    <dt>Time</dt><dd>${escapeHtml(b.preferred_time)}</dd>
+    <dt>Total</dt><dd>R${total.toLocaleString('en-ZA')}</dd>
+    <dt>Deposit paid</dt><dd>R${deposit.toLocaleString('en-ZA')}</dd>
+    <dt>Balance on arrival</dt><dd>R${(total - deposit).toLocaleString('en-ZA')}</dd>`;
+
+  document.getElementById('waLink').href =
+    `https://wa.me/27781655087?text=${encodeURIComponent(`Hi Fordoun Spa — about my booking #${b.id} (${b.preferred_date}, ${b.preferred_time}).`)}`;
+}
+
+async function main() {
+  if (!bookingId) {
+    document.getElementById('statusText').textContent = 'Missing booking id.';
+    return;
+  }
+
+  // If we came back from the mock checkout, fire the dev-pay simulator.
+  if (isMock && mockCheckoutId) {
+    await fetch('/api/dev/simulate-payment', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ booking_id: Number(bookingId) }),
+    });
+  }
+
+  const b = await loadBooking();
+  // Poll for up to 60s if still pending (webhook may be slow)
+  if (b && b.status === 'pending_payment') {
+    let tries = 0;
+    const t = setInterval(async () => {
+      tries++;
+      const b2 = await loadBooking();
+      if (b2.status !== 'pending_payment' || tries > 20) clearInterval(t);
+    }, 3000);
+  }
+}
+
+function escapeHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+main();
+</script>
+</body>
+</html>

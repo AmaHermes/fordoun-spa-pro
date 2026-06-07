@@ -1,0 +1,68 @@
+/* Demo-mode banner — sits at top of every page, dismissible per session */
+.demo-banner {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: #fff8e1;
+  color: #5d4e16;
+  border-bottom: 2px solid #f0c860;
+  padding: .55rem 1rem;
+  z-index: 1000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: .85rem;
+  display: flex; align-items: center; gap: .75rem;
+  justify-content: center;
+  text-align: center;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,.06);
+}
+.demo-banner b { color: #4a3f00; }
+.demo-banner .demo-pill {
+  background: #f0c860;
+  color: #4a3f00;
+  padding: .15rem .55rem;
+  border-radius: 999px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.demo-banner button {
+  background: transparent;
+  border: 1px solid #c4a64a;
+  color: #5d4e16;
+  border-radius: 6px;
+  padding: .25rem .6rem;
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.demo-banner button:hover { background: rgba(0,0,0,.05); }
+.demo-banner.hidden { display: none; }
+body.has-demo-banner { padding-top: 50px; }
+@media (max-width: 480px) {
+  .demo-banner { font-size: .78rem; padding: .5rem .75rem; }
+  body.has-demo-banner { padding-top: 70px; }
+}
+
+/* Magic-link "Open my link" floating ribbon */
+.demo-magic-toast {
+  position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%);
+  background: #2b3a2e; color: #faf6ef;
+  padding: .85rem 1.25rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: .9rem;
+  z-index: 1010;
+  display: flex; align-items: center; gap: .75rem;
+  animation: demo-toast-in .3s ease;
+}
+.demo-magic-toast a {
+  color: #b9956b;
+  font-weight: 600;
+  text-decoration: none;
+}
+@keyframes demo-toast-in {
+  from { transform: translate(-50%, 20px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}

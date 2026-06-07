@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#3a4a3a" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Secure deposit — Fordoun Spa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="demo-banner.css" />
+<style>
+body { background: var(--sand); min-height: 100vh; }
+.pay-wrap { max-width: 420px; margin: 4rem auto; padding: 1.5rem; }
+.pay-card {
+  background: var(--cream);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 2rem;
+}
+.pay-card h1 {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: .5rem;
+}
+.pay-sub { text-align: center; color: var(--ink-soft); font-size: .9rem; margin-bottom: 2rem; }
+.pay-amount {
+  text-align: center;
+  background: var(--green-deep);
+  color: var(--cream);
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+.pay-amount .label {
+  font-size: .75rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  opacity: .7;
+  margin-bottom: .25rem;
+}
+.pay-amount .amount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+.pay-row { display: flex; justify-content: space-between; padding: .5rem 0; font-size: .92rem; }
+.pay-row.balance { color: var(--ink-soft); font-size: .85rem; }
+.pay-rule { border-top: 1px solid var(--rule); margin: .75rem 0; }
+.pay-card-input {
+  background: rgba(0,0,0,.04);
+  border: 1.5px dashed var(--rule);
+  border-radius: 10px;
+  padding: 1rem;
+  color: var(--ink-soft);
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: .92rem;
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.pay-card-input strong { color: var(--ink); display: block; margin-bottom: .25rem; font-family: var(--sans); }
+.pay-btn {
+  width: 100%;
+  background: var(--green-deep);
+  color: var(--cream);
+  border: none;
+  padding: 1.1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.pay-btn:hover { background: #243024; }
+.pay-cancel {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: .85rem;
+}
+.pay-lock {
+  display: flex; align-items: center; justify-content: center;
+  gap: .4rem;
+  margin-top: 1rem;
+  color: var(--ink-soft);
+  font-size: .8rem;
+}
+</style>
+</head>
+<body>
+
+<div class="pay-wrap">
+  <div class="pay-card">
+    <h1>Secure your slot</h1>
+    <p class="pay-sub">Pay the deposit now, balance settles at the spa.</p>
+
+    <div class="pay-amount">
+      <div class="label">Deposit due now</div>
+      <div class="amount" id="amountPill">R—</div>
+    </div>
+
+    <div id="bookingSummary"></div>
+
+    <div class="pay-card-input">
+      <strong>💳 Card details would go here</strong>
+      In the real version this is a secure card form hosted by Yoco — your card details never touch our server.
+    </div>
+
+    <button class="pay-btn" id="payBtn">Pay deposit & continue →</button>
+    <a class="pay-cancel" id="cancelLink" href="index.html">← Cancel and return to booking</a>
+
+    <div class="pay-lock">🔒 Secured by payment gateway · PCI-DSS compliant</div>
+  </div>
+</div>
+
+<script src="demo-mock.js"></script>
+<script src="demo-banner.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const bookingId = Number(params.get("booking"));
+
+async function load() {
+  const res = await fetch(`/api/bookings/${bookingId}`);
+  if (!res.ok) {
+    document.getElementById("bookingSummary").innerHTML = "<p>Booking not found.</p>";
+    return;
+  }
+  const b = await res.json();
+  document.getElementById("amountPill").textContent = "R" + (b.deposit_cents/100).toLocaleString("en-ZA");
+  const total = b.total_cents / 100;
+  const deposit = b.deposit_cents / 100;
+  document.getElementById("bookingSummary").innerHTML = `
+    <div class="pay-row"><span>Treatments</span><span><b>R${total.toLocaleString("en-ZA")}</b></span></div>
+    ${b.treatments.map(t => `<div class="pay-row" style="color:var(--ink-soft);font-size:.82rem"><span>· ${t.name}</span><span>R${(t.price_cents/100).toLocaleString("en-ZA")}</span></div>`).join("")}
+    <div class="pay-rule"></div>
+    <div class="pay-row" style="font-weight:600"><span>Deposit (30%)</span><span>R${deposit.toLocaleString("en-ZA")}</span></div>
+    <div class="pay-row balance"><span>Balance on arrival</span><span>R${(total-deposit).toLocaleString("en-ZA")}</span></div>`;
+}
+
+document.getElementById("payBtn").addEventListener("click", async () => {
+  const btn = document.getElementById("payBtn");
+  btn.disabled = true;
+  btn.textContent = "Processing…";
+  await new Promise(r => setTimeout(r, 900));
+  // Simulate the gateway redirect
+  location.href = `confirmation.html?booking=${bookingId}&mock=1&mockCheckoutId=demo_${bookingId}`;
+});
+
+load();
+</script>
+</body>
+</html>
